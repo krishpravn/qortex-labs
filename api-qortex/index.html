@@ -270,8 +270,7 @@ body{font-family:var(--f);color:var(--ink2);background:var(--white);-webkit-font
     <h1 class="rv d1">Test APIs. Let AI<br><span class="grad">Explain the Failures.</span></h1>
     <p class="hero-sub rv d2">A self-hosted, AI-powered API testing platform with a unified playground for REST, GraphQL, WebSocket, and gRPC — featuring 6-provider AI analysis, 27 assertion types, and zero recurring costs.</p>
     <div class="hero-btns rv d3">
-      <a class="btn btn-p" href="https://github.com/krishpravn/api-qortex" target="_blank">📦 Get Started — Free</a>
-      <a class="btn btn-s" href="#screenshots">See Screenshots ↓</a>
+      <a class="btn btn-p" href="#screenshots">See Screenshots ↓</a>
       <a class="btn btn-s" href="#architecture">Architecture →</a>
     </div>
   </div>
@@ -648,18 +647,18 @@ body{font-family:var(--f);color:var(--ink2);background:var(--white);-webkit-font
 </footer>
 
 <script>
-/* ═══ SCROLL REVEAL ═══ */
+/* Scroll reveal */
 const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');obs.unobserve(e.target)}})},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 
-/* ═══ NAV SHADOW ═══ */
+/* Nav shadow */
 window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>10)});
 
-/* ═══ ANIMATED COUNTERS ═══ */
+/* Animated counters */
 const counterObs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){const el=e.target;const target=parseInt(el.dataset.target);const dur=1400;const start=performance.now();function tick(now){const p=Math.min((now-start)/dur,1);const ease=1-Math.pow(1-p,3);const val=Math.round(target*ease);el.textContent=val>=1000?val.toLocaleString():val;if(p<1)requestAnimationFrame(tick)}requestAnimationFrame(tick);counterObs.unobserve(el)}})},{threshold:.5});
 document.querySelectorAll('[data-target]').forEach(el=>counterObs.observe(el));
 
-/* ═══ ACCORDIONS ═══ */
+/* Accordions */
 function toggleRef(btn){const p=btn.nextElementSibling;const o=btn.classList.contains('open');document.querySelectorAll('.ref-btn').forEach(b=>{b.classList.remove('open');b.nextElementSibling.classList.remove('open')});if(!o){btn.classList.add('open');p.classList.add('open')}}
 function toggleFaq(btn){const p=btn.nextElementSibling;const o=btn.classList.contains('open');document.querySelectorAll('.faq-q').forEach(b=>{b.classList.remove('open');b.nextElementSibling.classList.remove('open')});if(!o){btn.classList.add('open');p.classList.add('open')}}
 </script>
