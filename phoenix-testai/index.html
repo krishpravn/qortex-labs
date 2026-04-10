@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phoenix TestAI — AI-Native Quality Intelligence Platform</title>
+<meta name="description" content="AI-native quality intelligence platform with 6 autonomous agents, 11 testing types, MCP integration, Playwright + Vibium execution, and complete test lifecycle management. Self-hosted, zero vendor lock-in.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+  --page:#F1F5F9;--card:#FFFFFF;--surface:#F8FAFC;
+  --border:#E2E8F0;--border2:#CBD5E1;
+  --shd:rgba(15,23,42,.04);--shd2:rgba(15,23,42,.08);--shd3:rgba(15,23,42,.14);
+  --ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;--ink5:#CBD5E1;
+  --blue:#2563EB;--blue-h:#1D4ED8;--blue-l:#60A5FA;--blue-bg:#EFF6FF;--blue-bd:#BFDBFE;
+  --pass:#059669;--pass-bg:#ECFDF5;--pass-bd:#A7F3D0;
+  --fail:#DC2626;--fail-bg:#FEF2F2;--fail-bd:#FECACA;
+  --warn:#D97706;--warn-bg:#FFFBEB;--warn-bd:#FDE68A;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;--purple-bd:#DDD6FE;
+  --gold:#F59E0B;--gold-bg:#FFFBEB;
+  --teal:#0891B2;--teal-bg:#ECFEFF;--teal-bd:#A5F3FC;
+  --pink:#DB2777;--pink-bg:#FDF2F8;--pink-bd:#FBCFE8;
+  --sidebar:#0F172A;
+  --phoenix-grad:linear-gradient(135deg,#2563EB 0%,#7C3AED 40%,#F59E0B 100%);
+}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--page);color:var(--ink2);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--blue-bd);color:var(--ink)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 48px;display:flex;align-items:center;justify-content:space-between;transition:all .4s}
+nav.sc{background:rgba(241,245,249,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 48px;box-shadow:0 1px 12px var(--shd)}
+.nb{display:flex;align-items:center;gap:10px}
+.nl{width:36px;height:36px;border-radius:10px;background:var(--phoenix-grad);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.3)}
+.nt{font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.5px}.nt em{font-style:normal;background:var(--phoenix-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nr{display:flex;align-items:center;gap:20px}.nr a{font-size:11.5px;font-weight:600;color:var(--ink4);text-decoration:none;transition:color .2s}.nr a:hover{color:var(--ink)}
+.btn-nav{padding:7px 16px;border-radius:99px;font-size:11px;font-weight:700;text-decoration:none;transition:all .2s}
+.btn-back{border:1px solid var(--border);color:var(--ink3);background:var(--card)}.btn-back:hover{border-color:var(--border2);color:var(--ink)}
+.btn-email{background:var(--blue);color:#fff;box-shadow:0 3px 10px rgba(37,99,235,.25)}.btn-email:hover{background:var(--blue-h)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 48px 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:-20%;background:radial-gradient(ellipse at 40% 30%,rgba(37,99,235,.13) 0%,transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(124,58,237,.12) 0%,transparent 45%),radial-gradient(ellipse at 50% 80%,rgba(245,158,11,.12) 0%,transparent 50%);animation:mesh 22s ease-in-out infinite;pointer-events:none}
+@keyframes mesh{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(12px,-8px) scale(1.02)}66%{transform:translate(-8px,10px) scale(.98)}}
+
+.phoenix-bird{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:400px;height:400px;opacity:.09;pointer-events:none}
+.ember{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:0;pointer-events:none}
+
+.hero-inner{position:relative;z-index:2;max-width:820px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:99px;border:1px solid var(--blue-bd);background:var(--blue-bg);font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:36px}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 8px rgba(37,99,235,.5);animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+
+.hero h1{font-size:clamp(20px,3.5vw,26px);font-weight:700;color:var(--ink3);letter-spacing:-.3px;margin-bottom:8px}
+.hero .brand{font-size:clamp(56px,10vw,120px);font-weight:900;letter-spacing:-4px;line-height:.9;margin-bottom:12px;background:var(--phoenix-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .tagline{font-size:clamp(22px,3vw,36px);font-weight:300;color:var(--ink3);letter-spacing:-.5px;font-style:italic;margin-bottom:32px}
+.hero .tagline em{font-weight:700;color:var(--ink);font-style:italic}
+.hero-sub{font-size:17px;line-height:1.7;color:var(--ink3);margin-bottom:40px;max-width:640px;margin-left:auto;margin-right:auto}
+
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:24px;background:var(--card);padding:20px 36px;border-radius:16px;border:1px solid var(--border);box-shadow:0 8px 32px var(--shd2);margin-bottom:32px;flex-wrap:wrap}
+.hs{text-align:center}.hs .v{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-1px}.hs .l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--ink4);margin-top:2px}
+.hs-sep{width:1px;height:28px;background:var(--border)}
+
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:99px;background:var(--blue);color:#fff;font-size:14px;font-weight:700;text-decoration:none;transition:all .3s;box-shadow:0 6px 20px rgba(37,99,235,.3)}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(37,99,235,.4);background:var(--blue-h)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:99px;border:2px solid var(--border2);background:var(--card);color:var(--ink2);font-size:14px;font-weight:700;text-decoration:none;transition:all .3s}.btn-secondary:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--shd2)}
+
+.hero-inner>*{opacity:0;transform:translateY(20px);animation:fadeIn .7s ease-out forwards}
+.hero-inner>*:nth-child(1){animation-delay:.2s}.hero-inner>*:nth-child(2){animation-delay:.35s}.hero-inner>*:nth-child(3){animation-delay:.5s}.hero-inner>*:nth-child(4){animation-delay:.65s}.hero-inner>*:nth-child(5){animation-delay:.8s}.hero-inner>*:nth-child(6){animation-delay:.95s}.hero-inner>*:nth-child(7){animation-delay:1.1s}
+@keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
+
+/* MANIFESTO */
+.manifesto{padding:80px 48px;text-align:center;position:relative}
+.manifesto::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,var(--page) 0%,var(--blue-bg) 50%,var(--page) 100%);pointer-events:none}
+.mani-inner{position:relative;z-index:2;max-width:800px;margin:0 auto}
+.m1{font-size:clamp(16px,2vw,22px);color:var(--ink4);line-height:1.6}
+.m2{font-size:clamp(18px,2.5vw,28px);color:var(--ink3);font-weight:600;margin-top:8px}
+.m3{font-size:clamp(28px,4.5vw,50px);font-weight:900;letter-spacing:-1.5px;background:var(--phoenix-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-top:4px;line-height:1.1}
+
+/* SECTION COMMON */
+.section{padding:80px 48px;max-width:1200px;margin:0 auto}
+.sec-l{font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:3px;margin-bottom:10px}
+.sec-t{font-size:clamp(28px,4vw,44px);font-weight:900;color:var(--ink);letter-spacing:-1.5px;margin-bottom:10px}
+.sec-s{font-size:15px;color:var(--ink3);max-width:560px;line-height:1.6;margin-bottom:40px}
+
+/* VIBRANT SECTION BACKGROUNDS */
+.sec-blue{background:linear-gradient(180deg,var(--page) 0%,var(--blue-bg) 30%,var(--blue-bg) 70%,var(--page) 100%)}
+.sec-purple{background:linear-gradient(180deg,var(--page) 0%,var(--purple-bg) 30%,var(--purple-bg) 70%,var(--page) 100%)}
+.sec-green{background:linear-gradient(180deg,var(--page) 0%,var(--pass-bg) 30%,var(--pass-bg) 70%,var(--page) 100%)}
+.sec-amber{background:linear-gradient(180deg,var(--page) 0%,var(--warn-bg) 30%,var(--warn-bg) 70%,var(--page) 100%)}
+.sec-teal{background:linear-gradient(180deg,var(--page) 0%,var(--teal-bg) 30%,var(--teal-bg) 70%,var(--page) 100%)}
+.sec-pink{background:linear-gradient(180deg,var(--page) 0%,var(--pink-bg) 30%,var(--pink-bg) 70%,var(--page) 100%)}
+.sec-dark{background:linear-gradient(180deg,var(--page) 0%,#0F172A 15%,#0F172A 85%,var(--page) 100%);color:#E2E8F0}
+.sec-dark .sec-t{color:#F1F5F9}.sec-dark .sec-s{color:#94A3B8}.sec-dark .sec-l{color:var(--blue-l)}
+
+/* FEATURES GRID */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;transition:all .35s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden;cursor:default}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px var(--shd2)}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:opacity .3s;border-radius:16px 16px 0 0}
+.feat-card:hover::before{opacity:1}
+.fc-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px}
+.fc-title{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:5px;letter-spacing:-.2px}
+.fc-desc{font-size:11.5px;line-height:1.6;color:var(--ink3);margin-bottom:12px}
+.fc-pills{display:flex;flex-wrap:wrap;gap:4px}
+.fc-pill{font-size:9px;font-weight:700;padding:3px 8px;border-radius:5px}
+.fc-status{position:absolute;top:12px;right:12px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 8px;border-radius:4px}
+
+/* TESTING TYPES — Colored grid */
+.tt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tt-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;transition:all .3s;position:relative;overflow:hidden}
+.tt-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px var(--shd2)}
+.tt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+.tt-icon{font-size:28px;margin-bottom:8px;display:block}
+.tt-name{font-size:12px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.tt-desc{font-size:9.5px;color:var(--ink3);line-height:1.4}
+.tt-badge{display:inline-block;font-size:8px;font-weight:700;padding:2px 7px;border-radius:4px;margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
+
+/* AI ENGINE — Provider chain */
+.ai-chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin:20px 0}
+.ai-prov{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 16px;text-align:center;min-width:100px;transition:all .3s}
+.ai-prov:hover{transform:translateY(-3px);box-shadow:0 8px 20px var(--shd2)}
+.ai-prov .num{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--blue);margin-bottom:2px}
+.ai-prov .name{font-size:12px;font-weight:700;color:var(--ink)}
+.ai-prov .sub{font-size:9px;color:var(--ink4)}
+.ai-arrow{font-size:16px;color:var(--ink5)}
+
+/* SELF-HEALER */
+.healer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.healer-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;transition:all .3s}
+.healer-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px var(--shd2)}
+.healer-pct{font-family:var(--mono);font-size:24px;font-weight:700;margin-bottom:2px}
+.healer-name{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.healer-fix{font-size:10px;color:var(--ink3);line-height:1.4}
+
+/* DUAL EXECUTION */
+.dual-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.dual-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;overflow:hidden;transition:all .3s}
+.dual-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px var(--shd2)}
+.dual-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0}
+.dual-card.pw::before{background:var(--blue)}.dual-card.vb::before{background:var(--gold)}
+.dual-icon{font-size:32px;margin-bottom:12px}
+.dual-name{font-size:20px;font-weight:900;color:var(--ink);margin-bottom:4px}
+.dual-sub{font-size:12px;color:var(--ink3);line-height:1.6;margin-bottom:14px}
+.dual-features{display:flex;flex-direction:column;gap:6px}
+.dual-feat{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink2)}
+.dual-feat .check{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+
+/* SCREENSHOTS */
+.ss-scroll{display:flex;gap:16px;overflow-x:auto;padding:8px 0 24px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.ss-scroll::-webkit-scrollbar{height:4px}.ss-scroll::-webkit-scrollbar-thumb{background:var(--ink5);border-radius:4px}
+.ss-card{flex:0 0 300px;scroll-snap-align:start;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--card);box-shadow:0 8px 24px var(--shd);transition:all .3s}
+.ss-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px var(--shd2)}
+.ss-img{width:100%;height:190px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--ink5);border-bottom:1px solid var(--border)}
+.ss-info{padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.ss-name{font-size:12px;font-weight:700;color:var(--ink)}.ss-tag{font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px}
+
+/* ARCHITECTURE */
+.arch-stack{display:flex;flex-direction:column;gap:6px}
+.arch-layer{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:12px;background:var(--card);border:1px solid var(--border);transition:all .3s}
+.arch-layer:hover{transform:translateX(6px);box-shadow:0 6px 20px var(--shd)}
+.al-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.al-name{font-size:13px;font-weight:800;color:var(--ink)}.al-desc{font-size:10px;color:var(--ink3)}
+.al-tags{display:flex;gap:4px;margin-left:auto;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.al-tag{font-family:var(--mono);font-size:9px;font-weight:600;padding:3px 8px;border-radius:4px;background:var(--surface);color:var(--ink3);border:1px solid var(--border)}
+
+/* ROADMAP */
+.rm-timeline{position:relative;padding-left:36px}
+.rm-timeline::before{content:'';position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--blue),var(--purple),var(--gold))}
+.rm-item{position:relative;padding:0 0 28px}
+.rm-dot{position:absolute;left:-28px;top:4px;width:12px;height:12px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 2px var(--blue)}
+.rm-dot.done{background:var(--blue)}.rm-dot.active{background:var(--gold);box-shadow:0 0 0 2px var(--gold),0 0 12px rgba(245,158,11,.4)}.rm-dot.future{background:var(--card);box-shadow:0 0 0 2px var(--ink5)}
+.rm-phase{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px}
+.rm-title{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.rm-desc{font-size:11.5px;color:var(--ink3);line-height:1.55}
+.rm-count{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;margin-top:5px;display:inline-block}
+
+/* DEEP REFERENCE */
+.ref-acc{display:flex;flex-direction:column;gap:8px}
+.ref-item{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s}
+.ref-item:hover{box-shadow:0 4px 16px var(--shd)}
+.ref-head{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;transition:background .2s}
+.ref-head:hover{background:var(--surface)}
+.ref-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ref-title{font-size:13px;font-weight:800;color:var(--ink);flex:1}
+.ref-count{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ink4)}
+.ref-arrow{font-size:12px;color:var(--ink4);transition:transform .3s}
+.ref-item.open .ref-arrow{transform:rotate(180deg)}
+.ref-body{max-height:0;overflow:hidden;transition:max-height .4s ease-out}
+.ref-item.open .ref-body{max-height:3000px}
+.ref-content{padding:0 18px 18px;font-size:11.5px;color:var(--ink3);line-height:1.65}
+.ref-content table{width:100%;border-collapse:collapse;margin-top:8px;font-size:10.5px}
+.ref-content th{text-align:left;padding:7px 8px;background:var(--surface);font-weight:700;color:var(--ink);border-bottom:1px solid var(--border)}
+.ref-content td{padding:6px 8px;border-bottom:1px solid var(--border);color:var(--ink2)}
+.ref-content code{font-family:var(--mono);font-size:10px;background:var(--surface);padding:2px 6px;border-radius:4px}
+
+/* SELF-HOSTED COMPARISON */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+.compare-card{border-radius:16px;padding:28px;position:relative}
+.compare-card.others{background:var(--surface);border:1px solid var(--border)}
+.compare-card.phoenix{background:var(--blue-bg);border:2px solid var(--blue-bd)}
+.compare-card h3{font-size:16px;font-weight:900;margin-bottom:16px;color:var(--ink)}
+.compare-list{display:flex;flex-direction:column;gap:8px}
+.compare-item{display:flex;align-items:center;gap:8px;font-size:12px}
+.compare-item .icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+
+/* FAQ */
+.faq-acc{display:flex;flex-direction:column;gap:8px}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer;font-size:13px;font-weight:700;color:var(--ink);transition:background .2s}
+.faq-q:hover{background:var(--surface)}
+.faq-q .arr{font-size:12px;color:var(--ink4);transition:transform .3s}
+.faq-item.open .faq-q .arr{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease-out}
+.faq-item.open .faq-a{max-height:600px}
+.faq-a-inner{padding:0 18px 18px;font-size:12.5px;color:var(--ink3);line-height:1.65}
+.faq-a-inner strong{color:var(--ink);font-weight:700}
+.faq-a-inner ul{margin:6px 0;padding-left:18px}
+.faq-a-inner li{margin-bottom:3px}
+
+/* ABOUT */
+.about{padding:100px 48px;background:linear-gradient(180deg,var(--page),var(--blue-bg))}
+.about-inner{max-width:900px;margin:0 auto;text-align:center}
+.about-avatar{width:80px;height:80px;border-radius:50%;background:var(--phoenix-grad);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#fff;margin:0 auto 20px;box-shadow:0 8px 24px rgba(37,99,235,.2)}
+.about-name{font-size:22px;font-weight:900;color:var(--ink);margin-bottom:4px}
+.about-role{font-size:13px;color:var(--ink3);margin-bottom:20px}
+.about-quote{font-size:15px;line-height:1.8;color:var(--ink3);max-width:650px;margin:0 auto 8px;font-style:italic}
+.about-quote strong{color:var(--ink);font-weight:700;font-style:normal}
+.about-products{display:flex;gap:12px;justify-content:center;margin:24px 0}
+.about-prod{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;border:1px solid var(--border);background:var(--card);font-size:12px;font-weight:700;color:var(--ink2);text-decoration:none;transition:all .3s}
+.about-prod:hover{transform:translateY(-2px);box-shadow:0 6px 16px var(--shd)}
+.about-prod .ap-dot{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff}
+.about-links{display:flex;gap:12px;justify-content:center;margin-top:20px}
+.about-link{display:flex;align-items:center;gap:6px;padding:10px 22px;border-radius:99px;border:2px solid var(--border2);font-size:13px;font-weight:700;color:var(--ink2);text-decoration:none;background:var(--card);transition:all .3s}
+.about-link:hover{border-color:var(--ink4);transform:translateY(-2px);box-shadow:0 6px 16px var(--shd)}
+
+/* FOOTER */
+footer{padding:40px 48px;border-top:1px solid var(--border);max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+footer .fl{font-size:11px;color:var(--ink4)}footer .fl a{color:var(--blue);text-decoration:none;font-weight:700}
+footer .fr{display:flex;gap:20px}footer .fr a{font-size:11px;color:var(--ink4);text-decoration:none;font-weight:600;transition:color .2s}footer .fr a:hover{color:var(--ink2)}
+
+/* ANIMATIONS */
+.sr{opacity:0;transform:translateY(30px);transition:opacity .7s ease-out,transform .7s ease-out}.sr.vi{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+/* DIVIDER */
+.divider{height:1px;background:linear-gradient(90deg,transparent 5%,var(--border2) 50%,transparent 95%);max-width:1200px;margin:0 auto}
+
+@media(max-width:900px){
+  nav{padding:10px 16px}nav.sc{padding:8px 16px}.nr a:not(.btn-nav){display:none}
+  .hero{padding:100px 20px 60px}.hero-stats{gap:12px;padding:16px 16px}
+  .manifesto{padding:60px 20px}
+  .section{padding:60px 20px}
+  .feat-grid{grid-template-columns:1fr}
+  .tt-grid{grid-template-columns:repeat(2,1fr)}
+  .healer-grid{grid-template-columns:1fr}
+  .dual-grid{grid-template-columns:1fr}
+  .compare{grid-template-columns:1fr}
+  .arch-layer{flex-wrap:wrap}.al-tags{margin-left:0;margin-top:6px;width:100%}
+  footer{flex-direction:column;gap:12px;text-align:center;padding:32px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nb"><div class="nl">P</div><div class="nt">Phoenix <em>TestAI</em></div></div>
+  <div class="nr">
+    <a href="#features">Features</a>
+    <a href="#testing-types">Testing Types</a>
+    <a href="#ai-engine">AI Engine</a>
+    <a href="#screenshots">Screenshots</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#reference">Reference</a>
+    <a href="#faq">FAQ</a>
+    <a href="mailto:krishpravn@gmail.com" class="btn-nav btn-email">Email</a>
+    <a href="../" class="btn-nav btn-back">&larr; Qortex Labs</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <svg class="phoenix-bird" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M200 60 C180 80, 140 100, 120 160 C100 220, 130 280, 160 300 C170 308, 175 320, 180 340 L200 380 L220 340 C225 320, 230 308, 240 300 C270 280, 300 220, 280 160 C260 100, 220 80, 200 60Z" fill="url(#pg)" opacity="0.5"/>
+    <path d="M200 60 C190 90, 170 110, 155 150 C145 180, 160 220, 180 240 L200 260 L220 240 C240 220, 255 180, 245 150 C230 110, 210 90, 200 60Z" fill="url(#pg)" opacity="0.3"/>
+    <path d="M120 160 C90 140, 50 150, 30 180 C50 170, 80 165, 100 175 C110 180, 115 170, 120 160Z" fill="url(#pg)" opacity="0.4"/>
+    <path d="M280 160 C310 140, 350 150, 370 180 C350 170, 320 165, 300 175 C290 180, 285 170, 280 160Z" fill="url(#pg)" opacity="0.4"/>
+    <defs><linearGradient id="pg" x1="100" y1="60" x2="300" y2="380"><stop offset="0%" stop-color="#2563EB"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs>
+  </svg>
+
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="dot"></span>AI-Native &middot; Self-Hosted &middot; MCP-Ready</div>
+    <h1>The Quality Intelligence Platform</h1>
+    <div class="brand">Phoenix TestAI</div>
+    <div class="tagline">From Every Failure, <em>Intelligence Rises.</em></div>
+    <p class="hero-sub">6 autonomous AI agents. 11 testing types. MCP protocol integration. Playwright + Vibium execution. Complete test lifecycle management. Self-hosted, zero vendor lock-in.</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="v" data-count="80">0</div><div class="l">API Routes</div></div><div class="hs-sep"></div>
+      <div class="hs"><div class="v" data-count="31">0</div><div class="l">Data Models</div></div><div class="hs-sep"></div>
+      <div class="hs"><div class="v" data-count="26">0</div><div class="l">AI Tools</div></div><div class="hs-sep"></div>
+      <div class="hs"><div class="v" data-count="6">0</div><div class="l">AI Agents</div></div><div class="hs-sep"></div>
+      <div class="hs"><div class="v" data-count="8">0</div><div class="l">Report Types</div></div><div class="hs-sep"></div>
+      <div class="hs"><div class="v" data-count="11">0</div><div class="l">Testing Types</div></div>
+    </div>
+    <div class="hero-actions">
+      <a href="#features" class="btn-primary">Explore Features &darr;</a>
+      <a href="#screenshots" class="btn-secondary">See Screenshots</a>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<div class="manifesto sr">
+  <div class="mani-inner">
+    <p class="m1">Tests fail. That is not the problem.<br>The problem is that most tools just report the failure and move on.</p>
+    <p class="m2">What if your platform could triage, learn, adapt,<br>and rise smarter after every run?</p>
+    <p class="m3">Phoenix does.</p>
+  </div>
+</div>
+
+<!-- PLATFORM FEATURES — 12 cards covering ALL built features -->
+<section class="section sr" id="features">
+  <div class="sec-l" style="color:var(--blue)">Platform Capabilities</div>
+  <div class="sec-t">Everything a Quality Team Needs.</div>
+  <div class="sec-s">From test execution to AI-driven insights. Every capability solves a real problem. Built features ship today. Pipeline items are coming next.</div>
+  <div class="feat-grid">
+
+    <div class="feat-card sr d1"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="feat-card::before" style="background:var(--blue)"></div><div class="fc-icon" style="background:var(--blue-bg);color:var(--blue)">&#x1F4CA;</div><div class="fc-title">Command Centre</div><div class="fc-desc">13 configurable widgets: release verdict, execution trends, module health, flake tracking, agent status, coverage gaps. Widget configurator for layout customization. All data live via SSE.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">AI Verdict</span><span class="fc-pill" style="background:var(--blue-bg);color:var(--blue)">14 Widgets</span><span class="fc-pill" style="background:var(--warn-bg);color:var(--warn)">Configurator</span></div></div>
+
+    <div class="feat-card sr d2"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--purple-bg);color:var(--purple)">&#x1F4AC;</div><div class="fc-title">26-Tool AI Chat</div><div class="fc-desc">Context-aware AI assistant. 13 DB tools + 4 browser tools (Playwright MCP) + 4 code tools (Filesystem MCP) + 5 repo tools (GitHub MCP). Tools load dynamically based on MCP connections.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--purple-bg);color:var(--purple)">13 DB Tools</span><span class="fc-pill" style="background:var(--blue-bg);color:var(--blue)">4 Browser</span><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">5 GitHub</span><span class="fc-pill" style="background:var(--warn-bg);color:var(--warn)">4 Code</span></div></div>
+
+    <div class="feat-card sr d3"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--pass-bg);color:var(--pass)">&#x1F916;</div><div class="fc-title">6 Autonomous Agents</div><div class="fc-desc">Triage, Discovery, Strategy, Learning, Generator, Executor. Event-driven with ReAct reasoning loop, confidence scoring, 3 autonomy levels, and human-in-loop approval via Proposals page.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">ReAct Loop</span><span class="fc-pill" style="background:var(--warn-bg);color:var(--warn)">Event Bus</span><span class="fc-pill" style="background:var(--purple-bg);color:var(--purple)">Proposals UI</span></div></div>
+
+    <div class="feat-card sr d1"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--warn-bg);color:var(--warn)">&#x1F4CB;</div><div class="fc-title">Test Management</div><div class="fc-desc">Requirements with Jira import + AI expansion. Test Cases with steps. Test Plans with manual execution. Defects with 7-status workflow. Requirements Traceability Matrix linking everything.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--blue-bg);color:var(--blue)">Requirements</span><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">Test Cases</span><span class="fc-pill" style="background:var(--fail-bg);color:var(--fail)">Defects</span><span class="fc-pill" style="background:var(--warn-bg);color:var(--warn)">RTM</span></div></div>
+
+    <div class="feat-card sr d2"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--blue-bg);color:var(--blue)">&#x1F50C;</div><div class="fc-title">MCP Integration</div><div class="fc-desc">Model Context Protocol with Playwright, Filesystem, and GitHub servers. Server registry with connect/disconnect. Quick-add presets. Agents and chat access all MCP tools through standard interface.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--blue-bg);color:var(--blue)">Playwright</span><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">Filesystem</span><span class="fc-pill" style="background:var(--purple-bg);color:var(--purple)">GitHub</span><span class="fc-pill" style="background:var(--warn-bg);color:var(--warn)">Registry</span></div></div>
+
+    <div class="feat-card sr d3"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--fail-bg);color:var(--fail)">&#x1F4C8;</div><div class="fc-title">Reports &amp; Analytics</div><div class="fc-desc">8 HTML report types. 8 analytics widgets. Compliance dashboards (SOC 2, HIPAA, GDPR, ISO 27001). AI-generated release reports. Live commentary during execution. Doc generator. Allure import.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--blue-bg);color:var(--blue)">8 Reports</span><span class="fc-pill" style="background:var(--purple-bg);color:var(--purple)">Analytics</span><span class="fc-pill" style="background:var(--warn-bg);color:var(--warn)">Compliance</span><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">Allure</span></div></div>
+
+    <div class="feat-card sr d1"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--teal-bg);color:var(--teal)">&#x1F6E1;</div><div class="fc-title">Self-Healer</div><div class="fc-desc">6-category AI failure diagnosis covering ALL failure types (not just selectors). Selectors 28%, Timing 25%, Runtime 15%, Test Data 15%, Visual 10%, Interactions 7%. Auto-fix with confidence scoring.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--teal-bg);color:var(--teal)">6 Categories</span><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">Auto-Fix</span><span class="fc-pill" style="background:var(--blue-bg);color:var(--blue)">Re-verify</span></div></div>
+
+    <div class="feat-card sr d2"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--purple-bg);color:var(--purple)">&#x2728;</div><div class="fc-title">AI Test Generator</div><div class="fc-desc">Describe what to test in plain English. AI generates Playwright test files with interactive checklist review. Save directly to suites. 3 modes: from text, from URL, from existing test.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--purple-bg);color:var(--purple)">3 Modes</span><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">Checklist</span><span class="fc-pill" style="background:var(--blue-bg);color:var(--blue)">Save to Suite</span></div></div>
+
+    <div class="feat-card sr d3"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--pass-bg);color:var(--pass)">&#x1F512;</div><div class="fc-title">Enterprise &amp; Security</div><div class="fc-desc">5-role RBAC (Owner, Admin, Lead, Tester, Viewer) with 16 resources. User management. Scheduling (cron + event + smart). Notifications (email + webhook). Audit trail. JWT sessions. REST API for CI/CD.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--blue-bg);color:var(--blue)">5 Roles</span><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">Scheduling</span><span class="fc-pill" style="background:var(--warn-bg);color:var(--warn)">Notifications</span><span class="fc-pill" style="background:var(--purple-bg);color:var(--purple)">REST API</span></div></div>
+
+    <div class="feat-card sr d1"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--warn-bg);color:var(--warn)">&#x1F4B0;</div><div class="fc-title">Cost Observatory</div><div class="fc-desc">LLM spend dashboard with budget tracking. Daily/weekly/monthly breakdowns by provider, model, and task type. Budget alerts at 80% threshold. Cost optimization recommendations.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--warn-bg);color:var(--warn)">Budget Track</span><span class="fc-pill" style="background:var(--blue-bg);color:var(--blue)">By Provider</span><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">Alerts</span></div></div>
+
+    <div class="feat-card sr d2"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--pink-bg);color:var(--pink)">&#x1F4DA;</div><div class="fc-title">Knowledge Base + Flake Intelligence</div><div class="fc-desc">RAG-powered knowledge base with hybrid search. Flake tracking with quarantine, pattern detection (timing/network/data), and trend analysis. Synthetic monitor for uptime checks.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--pink-bg);color:var(--pink)">RAG Search</span><span class="fc-pill" style="background:var(--warn-bg);color:var(--warn)">Flake Track</span><span class="fc-pill" style="background:var(--pass-bg);color:var(--pass)">Monitor</span></div></div>
+
+    <div class="feat-card sr d3"><div class="fc-status" style="background:var(--pass-bg);color:var(--pass)">Built</div><div class="fc-icon" style="background:var(--blue-bg);color:var(--blue)">&#x1F3A8;</div><div class="fc-title">4-Theme Design System</div><div class="fc-desc">Sapphire (blue), Ember (warm), Violet (purple), Teal (green). Plus Jakarta Sans + JetBrains Mono. Run Config Dialog with browser/device/mode selection. Live commentary during execution.</div><div class="fc-pills"><span class="fc-pill" style="background:var(--blue-bg);color:var(--blue)">Sapphire</span><span class="fc-pill" style="background:var(--warn-bg);color:var(--warn)">Ember</span><span class="fc-pill" style="background:var(--purple-bg);color:var(--purple)">Violet</span><span class="fc-pill" style="background:var(--teal-bg);color:var(--teal)">Teal</span></div></div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTING TYPES — 11 dimensions -->
+<div class="sec-purple">
+<section class="section sr" id="testing-types">
+  <div class="sec-l" style="color:var(--purple)">Testing Dimensions</div>
+  <div class="sec-t">11 Testing Types. One Platform.</div>
+  <div class="sec-s">From web E2E to chaos resilience. Every testing dimension your team needs, built into one unified platform.</div>
+  <div class="tt-grid">
+
+    <div class="tt-card sr d1" style="--c:var(--blue)"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x1F310;</span><div class="tt-name">Web E2E Testing</div><div class="tt-desc">Playwright-powered browser automation with live SSE streaming and AI failure analysis</div><div class="tt-badge" style="background:var(--pass-bg);color:var(--pass)">Built</div></div>
+
+    <div class="tt-card sr d1"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--pass);border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x1F4F1;</span><div class="tt-name">Cross-Browser &amp; Device</div><div class="tt-desc">Chromium, Firefox, WebKit + iPhone, Pixel, iPad, Galaxy Tab via Run Config Dialog</div><div class="tt-badge" style="background:var(--pass-bg);color:var(--pass)">Built</div></div>
+
+    <div class="tt-card sr d2"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--purple);border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x1F50D;</span><div class="tt-name">Exploratory Testing</div><div class="tt-desc">AI-assisted guided exploration with session recording and automatic finding capture</div><div class="tt-badge" style="background:var(--gold-bg);color:var(--warn)">Planned</div></div>
+
+    <div class="tt-card sr d2"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--warn);border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x26A1;</span><div class="tt-name">Performance Testing</div><div class="tt-desc">k6 and Lighthouse integration for load testing, response time profiling, and Core Web Vitals</div><div class="tt-badge" style="background:var(--gold-bg);color:var(--warn)">Planned</div></div>
+
+    <div class="tt-card sr d1"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fail);border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x1F6E1;</span><div class="tt-name">Security Testing</div><div class="tt-desc">OWASP scanning, vulnerability detection, security finding tracking with severity classification</div><div class="tt-badge" style="background:var(--gold-bg);color:var(--warn)">Planned</div></div>
+
+    <div class="tt-card sr d1"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--pink);border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x1F441;</span><div class="tt-name">Visual Regression</div><div class="tt-desc">Screenshot comparison with baselines, pixel-diff analysis, AI-powered change filtering</div><div class="tt-badge" style="background:var(--gold-bg);color:var(--warn)">Planned</div></div>
+
+    <div class="tt-card sr d2"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--teal);border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x1F517;</span><div class="tt-name">API Protocol Testing</div><div class="tt-desc">REST, GraphQL, WebSocket, gRPC via MCP-connected execution engines</div><div class="tt-badge" style="background:var(--gold-bg);color:var(--warn)">Planned</div></div>
+
+    <div class="tt-card sr d2"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#6366F1;border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x2699;</span><div class="tt-name">Accessibility Testing</div><div class="tt-desc">WCAG compliance checking, aria validation, keyboard navigation verification</div><div class="tt-badge" style="background:var(--gold-bg);color:var(--warn)">Planned</div></div>
+
+    <div class="tt-card sr d3"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#059669;border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x1F4DC;</span><div class="tt-name">Contract Testing</div><div class="tt-desc">API contract validation against OpenAPI specs with automated drift detection</div><div class="tt-badge" style="background:var(--gold-bg);color:var(--warn)">Planned</div></div>
+
+    <div class="tt-card sr d3"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#D97706;border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x1F4CA;</span><div class="tt-name">Data-Driven Testing</div><div class="tt-desc">Parameterized test execution with CSV/JSON datasets, dynamic variable injection</div><div class="tt-badge" style="background:var(--gold-bg);color:var(--warn)">Planned</div></div>
+
+    <div class="tt-card sr d3" style="grid-column:span 2"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--fail),var(--warn));border-radius:14px 14px 0 0"></div><span class="tt-icon">&#x1F525;</span><div class="tt-name">Chaos &amp; Resilience Testing</div><div class="tt-desc">Fault injection, network degradation simulation, recovery time validation. Test how your application behaves under stress and failure conditions.</div><div class="tt-badge" style="background:var(--gold-bg);color:var(--warn)">Planned</div></div>
+
+  </div>
+</section>
+</div>
+
+<!-- AI ENGINE — Dark vibrant section -->
+<div class="sec-dark">
+<section class="section sr" id="ai-engine" style="padding-bottom:40px">
+  <div class="sec-l">AI Engine</div>
+  <div class="sec-t">5 Providers. 3-Tier Fallback. Zero Lock-In.</div>
+  <div class="sec-s">Every AI feature works with any provider. Task-aware routing picks the best model per job. Automatic failover when a provider is down.</div>
+
+  <!-- Provider Chain -->
+  <div class="ai-chain">
+    <div class="ai-prov" style="border-color:rgba(255,255,255,.1)"><div class="num" style="color:var(--blue-l)">1</div><div class="name" style="color:#F1F5F9">OpenRouter</div><div class="sub" style="color:#64748B">200+ models &middot; Free tiers</div></div>
+    <div class="ai-arrow" style="color:#475569">&rarr;</div>
+    <div class="ai-prov" style="border-color:rgba(255,255,255,.1)"><div class="num" style="color:var(--blue-l)">2</div><div class="name" style="color:#F1F5F9">Anthropic</div><div class="sub" style="color:#64748B">Claude &middot; Reasoning</div></div>
+    <div class="ai-arrow" style="color:#475569">&rarr;</div>
+    <div class="ai-prov" style="border-color:rgba(255,255,255,.1)"><div class="num" style="color:var(--blue-l)">3</div><div class="name" style="color:#F1F5F9">OpenAI</div><div class="sub" style="color:#64748B">GPT-4o &middot; Fast</div></div>
+    <div class="ai-arrow" style="color:#475569">&rarr;</div>
+    <div class="ai-prov" style="border-color:rgba(255,255,255,.1)"><div class="num" style="color:var(--blue-l)">4</div><div class="name" style="color:#F1F5F9">Ollama</div><div class="sub" style="color:#64748B">Local &middot; Private</div></div>
+    <div class="ai-arrow" style="color:#475569">&rarr;</div>
+    <div class="ai-prov" style="border-color:rgba(255,255,255,.1)"><div class="num" style="color:var(--blue-l)">5</div><div class="name" style="color:#F1F5F9">Azure</div><div class="sub" style="color:#64748B">Enterprise</div></div>
+  </div>
+  <p style="text-align:center;font-size:12px;color:#64748B;margin-top:16px">Task-aware routing: <code style="background:rgba(255,255,255,.08);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:10px;color:#94A3B8">classify-failure &rarr; fast-accurate</code> &middot; <code style="background:rgba(255,255,255,.08);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:10px;color:#94A3B8">release-verdict &rarr; reasoning</code> &middot; <code style="background:rgba(255,255,255,.08);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:10px;color:#94A3B8">summarize-run &rarr; fast-cheap</code></p>
+</section>
+
+<!-- SELF-HEALER DETAIL — Still in dark section -->
+<section class="section" style="padding-top:20px;padding-bottom:40px">
+  <div class="sec-l" style="color:var(--teal-bd)">Self-Healer</div>
+  <div class="sec-t" style="color:#F1F5F9">6 Failure Categories. Not Just Selectors.</div>
+  <div class="sec-s" style="color:#94A3B8">Competitors heal only broken selectors (28% of failures). Phoenix covers all 6 categories.</div>
+  <div class="healer-grid">
+    <div class="healer-card sr d1" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)"><div class="healer-pct" style="color:var(--blue-l)">28%</div><div class="healer-name" style="color:#E2E8F0">Selectors</div><div class="healer-fix" style="color:#94A3B8">CSS/ID changed &rarr; upgrade to getByRole/getByTestId</div></div>
+    <div class="healer-card sr d1" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)"><div class="healer-pct" style="color:var(--purple-bd)">25%</div><div class="healer-name" style="color:#E2E8F0">Timing</div><div class="healer-fix" style="color:#94A3B8">Element loads late &rarr; add resilient wait/polling</div></div>
+    <div class="healer-card sr d2" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)"><div class="healer-pct" style="color:var(--fail-bd)">15%</div><div class="healer-name" style="color:#E2E8F0">Runtime Errors</div><div class="healer-fix" style="color:#94A3B8">App crash/env issue &rarr; retry after restart</div></div>
+    <div class="healer-card sr d2" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)"><div class="healer-pct" style="color:var(--warn-bd)">15%</div><div class="healer-name" style="color:#E2E8F0">Test Data</div><div class="healer-fix" style="color:#94A3B8">Expired session/stale data &rarr; refresh data</div></div>
+    <div class="healer-card sr d3" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)"><div class="healer-pct" style="color:var(--pink-bd)">10%</div><div class="healer-name" style="color:#E2E8F0">Visual Assertions</div><div class="healer-fix" style="color:#94A3B8">Render diff &rarr; filter irrelevant changes</div></div>
+    <div class="healer-card sr d3" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)"><div class="healer-pct" style="color:var(--teal-bd)">7%</div><div class="healer-name" style="color:#E2E8F0">Interaction Changes</div><div class="healer-fix" style="color:#94A3B8">Element behind overlay &rarr; add prerequisite steps</div></div>
+  </div>
+</section>
+
+<!-- DUAL EXECUTION — Still in dark section -->
+<section class="section" style="padding-top:20px">
+  <div class="sec-l" style="color:var(--gold)">Execution Engines</div>
+  <div class="sec-t" style="color:#F1F5F9">Playwright Today. Vibium Tomorrow.</div>
+  <div class="sec-s" style="color:#94A3B8">Two execution engines. Playwright for proven reliability. Vibium for AI-native testing.</div>
+  <div class="dual-grid">
+    <div class="dual-card pw sr d1" style="background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08)">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);border-radius:16px 16px 0 0"></div>
+      <div class="dual-icon">&#x1F3AD;</div>
+      <div class="dual-name" style="color:#F1F5F9">Playwright</div>
+      <div style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;background:var(--pass-bg);color:var(--pass);display:inline-block;margin-bottom:10px">ACTIVE</div>
+      <div class="dual-sub" style="color:#94A3B8">Microsoft's battle-tested browser automation. Chromium, Firefox, WebKit. Headed and headless modes.</div>
+      <div class="dual-features">
+        <div class="dual-feat" style="color:#CBD5E1"><div class="check" style="background:rgba(5,150,105,.15);color:var(--pass)">&#x2713;</div>Live SSE streaming during execution</div>
+        <div class="dual-feat" style="color:#CBD5E1"><div class="check" style="background:rgba(5,150,105,.15);color:var(--pass)">&#x2713;</div>AI failure analysis on every failure</div>
+        <div class="dual-feat" style="color:#CBD5E1"><div class="check" style="background:rgba(5,150,105,.15);color:var(--pass)">&#x2713;</div>Run Config: browser + device + workers + retries</div>
+        <div class="dual-feat" style="color:#CBD5E1"><div class="check" style="background:rgba(5,150,105,.15);color:var(--pass)">&#x2713;</div>MCP server for AI agent browser access</div>
+        <div class="dual-feat" style="color:#CBD5E1"><div class="check" style="background:rgba(5,150,105,.15);color:var(--pass)">&#x2713;</div>Auto-retry with configurable count</div>
+      </div>
+    </div>
+    <div class="dual-card vb sr d2" style="background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08)">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);border-radius:16px 16px 0 0"></div>
+      <div class="dual-icon">&#x1F525;</div>
+      <div class="dual-name" style="color:#F1F5F9">Vibium</div>
+      <div style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;background:var(--gold-bg);color:var(--warn);display:inline-block;margin-bottom:10px">PLANNED</div>
+      <div class="dual-sub" style="color:#94A3B8">AI-native browser engine with WebDriver BiDi. Next-generation test execution for intelligent automation.</div>
+      <div class="dual-features">
+        <div class="dual-feat" style="color:#CBD5E1"><div class="check" style="background:rgba(245,158,11,.15);color:var(--gold)">&#x25CB;</div>AI-assisted exploratory testing</div>
+        <div class="dual-feat" style="color:#CBD5E1"><div class="check" style="background:rgba(245,158,11,.15);color:var(--gold)">&#x25CB;</div>Visual regression with AI diff filtering</div>
+        <div class="dual-feat" style="color:#CBD5E1"><div class="check" style="background:rgba(245,158,11,.15);color:var(--gold)">&#x25CB;</div>Page Object auto-generation from crawling</div>
+        <div class="dual-feat" style="color:#CBD5E1"><div class="check" style="background:rgba(245,158,11,.15);color:var(--gold)">&#x25CB;</div>Security scanning (OWASP)</div>
+        <div class="dual-feat" style="color:#CBD5E1"><div class="check" style="background:rgba(245,158,11,.15);color:var(--gold)">&#x25CB;</div>Performance profiling (k6/Lighthouse)</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SCREENSHOTS -->
+<section class="section sr" id="screenshots">
+  <div class="sec-l" style="color:var(--blue)">In Action</div>
+  <div class="sec-t">See It Working</div>
+  <div class="sec-s">Screenshots from the live platform. Scroll horizontally to explore.</div>
+  <div class="ss-scroll">
+    <div class="ss-card"><div class="ss-img">&#x1F4CA;</div><div class="ss-info"><span class="ss-name">Command Centre</span><span class="ss-tag" style="background:var(--blue-bg);color:var(--blue)">Dashboard</span></div></div>
+    <div class="ss-card"><div class="ss-img">&#x1F4AC;</div><div class="ss-info"><span class="ss-name">AI Chat + MCP</span><span class="ss-tag" style="background:var(--purple-bg);color:var(--purple)">AI</span></div></div>
+    <div class="ss-card"><div class="ss-img">&#x1F916;</div><div class="ss-info"><span class="ss-name">Agent Proposals</span><span class="ss-tag" style="background:var(--warn-bg);color:var(--warn)">Agents</span></div></div>
+    <div class="ss-card"><div class="ss-img">&#x1F9EA;</div><div class="ss-info"><span class="ss-name">Test Cases + RTM</span><span class="ss-tag" style="background:var(--pass-bg);color:var(--pass)">Management</span></div></div>
+    <div class="ss-card"><div class="ss-img">&#x1F4C8;</div><div class="ss-info"><span class="ss-name">Reports Hub</span><span class="ss-tag" style="background:var(--fail-bg);color:var(--fail)">Reports</span></div></div>
+    <div class="ss-card"><div class="ss-img">&#x1F4B0;</div><div class="ss-info"><span class="ss-name">Cost Observatory</span><span class="ss-tag" style="background:var(--warn-bg);color:var(--warn)">AI Costs</span></div></div>
+    <div class="ss-card"><div class="ss-img">&#x1F50C;</div><div class="ss-info"><span class="ss-name">MCP Servers</span><span class="ss-tag" style="background:var(--teal-bg);color:var(--teal)">MCP</span></div></div>
+    <div class="ss-card"><div class="ss-img">&#x2728;</div><div class="ss-info"><span class="ss-name">Test Generator</span><span class="ss-tag" style="background:var(--purple-bg);color:var(--purple)">AI</span></div></div>
+    <div class="ss-card"><div class="ss-img">&#x1F3A8;</div><div class="ss-info"><span class="ss-name">4 Themes</span><span class="ss-tag" style="background:var(--pink-bg);color:var(--pink)">Design</span></div></div>
+    <div class="ss-card"><div class="ss-img">&#x1F4CB;</div><div class="ss-info"><span class="ss-name">Compliance</span><span class="ss-tag" style="background:var(--blue-bg);color:var(--blue)">Enterprise</span></div></div>
+  </div>
+  <p style="font-size:11px;color:var(--ink4);margin-top:6px;text-align:center">&#x1F4F8; Replace emoji placeholders with actual screenshots from your running app.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- SELF-HOSTED COMPARISON -->
+<div class="sec-green">
+<section class="section sr" id="self-hosted">
+  <div class="sec-l" style="color:var(--pass)">Self-Hosted</div>
+  <div class="sec-t">Your Server. Your Data. Zero Cost.</div>
+  <div class="compare">
+    <div class="compare-card others">
+      <h3>&#x2715; Typical Test Management Tools</h3>
+      <div class="compare-list">
+        <div class="compare-item"><div class="icon" style="background:var(--fail-bg);color:var(--fail)">&#x2715;</div>$30-$79 per user per month</div>
+        <div class="compare-item"><div class="icon" style="background:var(--fail-bg);color:var(--fail)">&#x2715;</div>Your test data on their cloud</div>
+        <div class="compare-item"><div class="icon" style="background:var(--fail-bg);color:var(--fail)">&#x2715;</div>AI features cost extra or absent</div>
+        <div class="compare-item"><div class="icon" style="background:var(--fail-bg);color:var(--fail)">&#x2715;</div>No autonomous agents</div>
+        <div class="compare-item"><div class="icon" style="background:var(--fail-bg);color:var(--fail)">&#x2715;</div>No MCP protocol support</div>
+        <div class="compare-item"><div class="icon" style="background:var(--fail-bg);color:var(--fail)">&#x2715;</div>No local AI option</div>
+        <div class="compare-item"><div class="icon" style="background:var(--fail-bg);color:var(--fail)">&#x2715;</div>Limited test execution capabilities</div>
+      </div>
+    </div>
+    <div class="compare-card phoenix">
+      <h3>&#x2713; Phoenix TestAI</h3>
+      <div class="compare-list">
+        <div class="compare-item"><div class="icon" style="background:var(--pass-bg);color:var(--pass)">&#x2713;</div><strong>$0 forever.</strong> No per-seat cost.</div>
+        <div class="compare-item"><div class="icon" style="background:var(--pass-bg);color:var(--pass)">&#x2713;</div>Single SQLite file on your server</div>
+        <div class="compare-item"><div class="icon" style="background:var(--pass-bg);color:var(--pass)">&#x2713;</div>5-provider AI with free tiers</div>
+        <div class="compare-item"><div class="icon" style="background:var(--pass-bg);color:var(--pass)">&#x2713;</div>6 autonomous AI agents</div>
+        <div class="compare-item"><div class="icon" style="background:var(--pass-bg);color:var(--pass)">&#x2713;</div>MCP protocol integration</div>
+        <div class="compare-item"><div class="icon" style="background:var(--pass-bg);color:var(--pass)">&#x2713;</div>Ollama for 100% private AI</div>
+        <div class="compare-item"><div class="icon" style="background:var(--pass-bg);color:var(--pass)">&#x2713;</div>Playwright + Vibium execution</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ARCHITECTURE -->
+<section class="section sr" id="architecture">
+  <div class="sec-l" style="color:var(--purple)">Under the Hood</div>
+  <div class="sec-t">7-Layer Architecture</div>
+  <div class="sec-s">Seven architectural layers. No scaffolding tools, no generators.</div>
+  <div class="arch-stack">
+    <div class="arch-layer sr d1"><div class="al-icon" style="background:var(--blue-bg);color:var(--blue)">&#x1F310;</div><div style="flex:1"><div class="al-name">Frontend</div><div class="al-desc">27 pages, 4-theme design system, widget configurator, responsive layouts</div></div><div class="al-tags"><span class="al-tag">Next.js 15</span><span class="al-tag">React 19</span><span class="al-tag">Tailwind v4</span><span class="al-tag">shadcn/ui</span></div></div>
+    <div class="arch-layer sr d1"><div class="al-icon" style="background:var(--purple-bg);color:var(--purple)">&#x1F9E0;</div><div style="flex:1"><div class="al-name">AI Intelligence</div><div class="al-desc">LLM Router with 3-tier fallback, 5 providers, Cost Observatory, task-aware routing</div></div><div class="al-tags"><span class="al-tag">OpenRouter</span><span class="al-tag">Anthropic</span><span class="al-tag">Ollama</span></div></div>
+    <div class="arch-layer sr d2"><div class="al-icon" style="background:var(--pass-bg);color:var(--pass)">&#x1F916;</div><div style="flex:1"><div class="al-name">Agent Framework</div><div class="al-desc">6 agents, ReAct loop, event-driven orchestrator, proposal system, 3 autonomy levels</div></div><div class="al-tags"><span class="al-tag">ReAct</span><span class="al-tag">EventEmitter</span><span class="al-tag">Proposals</span></div></div>
+    <div class="arch-layer sr d2"><div class="al-icon" style="background:var(--warn-bg);color:var(--warn)">&#x1F50C;</div><div style="flex:1"><div class="al-name">MCP Integration</div><div class="al-desc">Playwright, Filesystem, GitHub via Model Context Protocol. STDIO transport, auto-connect</div></div><div class="al-tags"><span class="al-tag">MCP SDK</span><span class="al-tag">stdio</span><span class="al-tag">globalThis</span></div></div>
+    <div class="arch-layer sr d2"><div class="al-icon" style="background:var(--fail-bg);color:var(--fail)">&#x1F6E1;</div><div style="flex:1"><div class="al-name">Enterprise</div><div class="al-desc">5-role RBAC, scheduling, notifications, 8 reports, compliance, audit trail, user management</div></div><div class="al-tags"><span class="al-tag">RBAC</span><span class="al-tag">Cron</span><span class="al-tag">SSE</span><span class="al-tag">JWT</span></div></div>
+    <div class="arch-layer sr d3"><div class="al-icon" style="background:var(--blue-bg);color:var(--blue)">&#x25B6;</div><div style="flex:1"><div class="al-name">Execution Engine</div><div class="al-desc">Playwright runner, live SSE streaming, AI failure analysis, auto-retry, run config dialog</div></div><div class="al-tags"><span class="al-tag">Playwright</span><span class="al-tag">child_process</span></div></div>
+    <div class="arch-layer sr d3"><div class="al-icon" style="background:var(--surface);color:var(--ink3)">&#x1F4BE;</div><div style="flex:1"><div class="al-name">Data Layer</div><div class="al-desc">31 Prisma models, event bus (8 event types), audit trail, SQLite dev / PostgreSQL prod</div></div><div class="al-tags"><span class="al-tag">Prisma</span><span class="al-tag">SQLite</span><span class="al-tag">Zustand</span></div></div>
+  </div>
+  <div style="margin-top:20px"><div class="sec-l" style="color:var(--ink4)">Tech Stack</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+    <span class="al-tag">Next.js 15</span><span class="al-tag">React 19</span><span class="al-tag">TypeScript 5</span><span class="al-tag">Prisma ORM</span><span class="al-tag">SQLite / PostgreSQL</span><span class="al-tag">Tailwind CSS v4</span><span class="al-tag">Zustand 5</span><span class="al-tag">shadcn/ui</span><span class="al-tag">Playwright</span><span class="al-tag">MCP SDK</span><span class="al-tag">Auth.js (JWT)</span><span class="al-tag">SSE Streaming</span><span class="al-tag">Recharts</span><span class="al-tag">Zod</span><span class="al-tag">node-cron</span><span class="al-tag">Nodemailer</span><span class="al-tag">bcryptjs</span>
+  </div></div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ROADMAP -->
+<div class="sec-amber">
+<section class="section sr" id="roadmap">
+  <div class="sec-l" style="color:var(--warn)">Roadmap</div>
+  <div class="sec-t">From Foundation to Frontier</div>
+  <div class="sec-s">8 phases. Built sequentially. Each phase adds a complete architectural layer.</div>
+  <div class="rm-timeline">
+    <div class="rm-item sr d1"><div class="rm-dot done"></div><div class="rm-phase" style="color:var(--blue)">Phase 0-2 &middot; Complete</div><div class="rm-title">Foundation + Execution + Intelligence</div><div class="rm-desc">Auth, landing page, dashboard, suite explorer, Playwright runner, live SSE streaming, report generation, AI failure analysis, real data integration, demo app with SauceDemo tests.</div><div class="rm-count" style="background:var(--blue-bg);color:var(--blue)">12 Sessions</div></div>
+
+    <div class="rm-item sr d1"><div class="rm-dot done"></div><div class="rm-phase" style="color:var(--purple)">Phase 3 &middot; Complete</div><div class="rm-title">AI Layer</div><div class="rm-desc">LLM Router with 3-tier fallback and 5 providers. Cost Observatory. AI Chat with 13 tools. Self-Healer (6 failure categories). Test Generator with interactive checklist. Knowledge Base with hybrid RAG search.</div><div class="rm-count" style="background:var(--purple-bg);color:var(--purple)">6 AI Features</div></div>
+
+    <div class="rm-item sr d2"><div class="rm-dot done"></div><div class="rm-phase" style="color:var(--pass)">Phase 4 &middot; Complete</div><div class="rm-title">Test Management</div><div class="rm-desc">Requirements (Jira import, AI expansion). Test Cases (steps, automation linking). Defects (7-status workflow). Test Plans (manual execution). RTM linking everything. Run Config Dialog.</div><div class="rm-count" style="background:var(--pass-bg);color:var(--pass)">5 Modules</div></div>
+
+    <div class="rm-item sr d2"><div class="rm-dot done"></div><div class="rm-phase" style="color:var(--warn)">Phase 5 &middot; Complete</div><div class="rm-title">Agentic Intelligence</div><div class="rm-desc">Event bus (8 event types). 6 autonomous agents with ReAct reasoning. Orchestrator with cooldown. Proposal system (approve/reject/auto-execute). REST API for CI/CD. Agent dashboard widgets.</div><div class="rm-count" style="background:var(--warn-bg);color:var(--warn)">6 Agents + 14 Sessions</div></div>
+
+    <div class="rm-item sr d2"><div class="rm-dot done"></div><div class="rm-phase" style="color:var(--fail)">Phase 6 &middot; Complete</div><div class="rm-title">Enterprise</div><div class="rm-desc">5-role RBAC + user management. Scheduling (cron/event/smart). Notifications (email/webhook). 8 HTML report types + analytics + compliance dashboards (SOC 2, HIPAA, GDPR, ISO). Live commentary. Doc generator. Synthetic monitor. Allure import. 4 themes. Widget configurator.</div><div class="rm-count" style="background:var(--fail-bg);color:var(--fail)">16 Sessions</div></div>
+
+    <div class="rm-item sr d3"><div class="rm-dot active"></div><div class="rm-phase" style="color:var(--gold)">Phase 7 &middot; In Progress</div><div class="rm-title">Expansion &amp; Protocol</div><div class="rm-desc">MCP Foundation (registry, connection manager). Playwright MCP (18 capabilities). Filesystem MCP. GitHub MCP. <strong>Upcoming:</strong> Vibium engine, exploratory testing, API protocol testing (REST/GraphQL/WebSocket/gRPC), visual regression, security scanning, performance profiling, page object generator.</div><div class="rm-count" style="background:var(--gold-bg);color:var(--warn)">4 of 12 Sessions</div></div>
+
+    <div class="rm-item sr d3"><div class="rm-dot future"></div><div class="rm-phase" style="color:var(--ink4)">Phase 8 &middot; Planned</div><div class="rm-title">Polish &amp; Hardening</div><div class="rm-desc">Security hardening (input validation, rate limiting, Zod schemas). Performance optimization. Accessibility audit. Dependency management. Comprehensive E2E test coverage. Docker deployment.</div><div class="rm-count" style="background:var(--surface);color:var(--ink4)">Planned</div></div>
+  </div>
+</section>
+</div>
+
+<!-- DEEP REFERENCE -->
+<section class="section sr" id="reference">
+  <div class="sec-l" style="color:var(--teal)">Deep Reference</div>
+  <div class="sec-t">Every Feature, Explained</div>
+  <div class="sec-s">Click any section to see complete details.</div>
+  <div class="ref-acc">
+
+    <div class="ref-item"><div class="ref-head" onclick="toggleRef(this)"><div class="ref-icon" style="background:var(--pass-bg);color:var(--pass)">&#x1F916;</div><div class="ref-title">6 AI Agents with ReAct Reasoning</div><div class="ref-count">6 agents</div><div class="ref-arrow">&#x25BC;</div></div><div class="ref-body"><div class="ref-content"><p>Each agent runs a ReAct loop: observe &rarr; reason &rarr; act &rarr; observe result. Proposals created for human approval unless confidence exceeds auto-execute threshold.</p><table><tr><th>Agent</th><th>Trigger</th><th>Output</th></tr><tr><td><strong>Triage</strong></td><td>test:failed</td><td>Error classification + suggested fix</td></tr><tr><td><strong>Discovery</strong></td><td>run:completed, coverage:changed</td><td>Coverage gap report + test suggestions</td></tr><tr><td><strong>Strategy</strong></td><td>run:completed, defect:created</td><td>Test strategy proposal</td></tr><tr><td><strong>Learning</strong></td><td>run:completed</td><td>Pattern insights + KB articles</td></tr><tr><td><strong>Generator</strong></td><td>coverage:changed</td><td>Generated test cases</td></tr><tr><td><strong>Executor</strong></td><td>run:completed</td><td>Automated test execution</td></tr></table></div></div></div>
+
+    <div class="ref-item"><div class="ref-head" onclick="toggleRef(this)"><div class="ref-icon" style="background:var(--purple-bg);color:var(--purple)">&#x1F4AC;</div><div class="ref-title">26-Tool AI Chat System</div><div class="ref-count">26 tools</div><div class="ref-arrow">&#x25BC;</div></div><div class="ref-body"><div class="ref-content"><p>Tools load dynamically based on MCP connection status. Base: 13 database tools. Playwright MCP: +4. Filesystem MCP: +4. GitHub MCP: +5.</p><table><tr><th>Category</th><th>Count</th><th>Capabilities</th></tr><tr><td><strong>Database</strong></td><td>13</td><td>Query results, runs, suites, requirements, test cases, defects, flakes, coverage, agent proposals, system stats</td></tr><tr><td><strong>Browser</strong></td><td>4</td><td>Navigate URLs, click elements, fill forms, take screenshots via Playwright MCP</td></tr><tr><td><strong>Code</strong></td><td>4</td><td>Read test files, search code, list files, get info via Filesystem MCP</td></tr><tr><td><strong>GitHub</strong></td><td>5</td><td>PR diffs, repo files, code search, commits, issues via GitHub MCP</td></tr></table></div></div></div>
+
+    <div class="ref-item"><div class="ref-head" onclick="toggleRef(this)"><div class="ref-icon" style="background:var(--blue-bg);color:var(--blue)">&#x1F4C8;</div><div class="ref-title">8 Report Types + Live Commentary + Allure</div><div class="ref-count">8+ reports</div><div class="ref-arrow">&#x25BC;</div></div><div class="ref-body"><div class="ref-content"><table><tr><th>Report</th><th>Content</th></tr><tr><td><strong>Execution Summary</strong></td><td>Pass/fail breakdown, duration, trends</td></tr><tr><td><strong>Coverage Matrix</strong></td><td>Requirements vs test cases, gap analysis</td></tr><tr><td><strong>Defect Summary</strong></td><td>Severity distribution, status workflow</td></tr><tr><td><strong>Flake Intelligence</strong></td><td>Flaky test patterns, quarantine, trends</td></tr><tr><td><strong>AI Performance</strong></td><td>LLM usage, cost per capability, latency</td></tr><tr><td><strong>Release Readiness</strong></td><td>AI GO/NO-GO with confidence score</td></tr><tr><td><strong>Compliance Evidence</strong></td><td>SOC 2, HIPAA, GDPR, ISO 27001 mapping</td></tr><tr><td><strong>Sprint Summary</strong></td><td>Sprint velocity, execution, defect trends</td></tr></table><p style="margin-top:8px"><strong>Also built:</strong> Live Commentary (AI narrates execution in real-time), Doc Generator (AI creates test documentation), Allure Import (parse external Allure reports).</p></div></div></div>
+
+    <div class="ref-item"><div class="ref-head" onclick="toggleRef(this)"><div class="ref-icon" style="background:var(--warn-bg);color:var(--warn)">&#x1F50C;</div><div class="ref-title">MCP Protocol + 3 Servers</div><div class="ref-count">3 servers</div><div class="ref-arrow">&#x25BC;</div></div><div class="ref-body"><div class="ref-content"><p>Model Context Protocol enables standardized tool integration. Each server runs as a child process via STDIO with timeout protection and orphan cleanup.</p><table><tr><th>Server</th><th>Capabilities</th><th>Tools</th></tr><tr><td><strong>Playwright</strong></td><td>Browser automation, page inspection, screenshots</td><td>18 capabilities</td></tr><tr><td><strong>Filesystem</strong></td><td>Read test files, search code patterns</td><td>4 tools scoped to test-suites/ + src/</td></tr><tr><td><strong>GitHub</strong></td><td>PR diffs, repo files, code search, commits</td><td>5 read-only tools</td></tr></table><p style="margin-top:8px"><strong>Safety:</strong> 30s connection timeout, 60s tool call timeout, orphaned process cleanup. Settings UI with quick-add presets for all 4 servers (Playwright, Vibium, Filesystem, GitHub).</p></div></div></div>
+
+    <div class="ref-item"><div class="ref-head" onclick="toggleRef(this)"><div class="ref-icon" style="background:var(--pass-bg);color:var(--pass)">&#x1F6E1;</div><div class="ref-title">Enterprise: RBAC + Scheduling + Notifications</div><div class="ref-count">5 roles</div><div class="ref-arrow">&#x25BC;</div></div><div class="ref-body"><div class="ref-content"><table><tr><th>Role</th><th>Permissions</th></tr><tr><td><strong>Owner</strong></td><td>Full system control including ownership transfer</td></tr><tr><td><strong>Admin</strong></td><td>User management, settings, all artifacts, agent config</td></tr><tr><td><strong>Lead</strong></td><td>Create/edit artifacts, execute runs, approve proposals, manage schedules</td></tr><tr><td><strong>Tester</strong></td><td>Execute runs, log defects, read-only config</td></tr><tr><td><strong>Viewer</strong></td><td>Read-only access across all resources</td></tr></table><p style="margin-top:8px"><strong>Scheduling:</strong> Cron expressions, event-triggered (run:completed triggers next suite), smart scheduling (AI decides when to run). <strong>Notifications:</strong> Email + Webhook with rate limiting, quiet hours, severity threshold. <strong>Synthetic Monitor:</strong> Periodic uptime checks with alerting.</p></div></div></div>
+
+    <div class="ref-item"><div class="ref-head" onclick="toggleRef(this)"><div class="ref-icon" style="background:var(--pink-bg);color:var(--pink)">&#x1F4DA;</div><div class="ref-title">Knowledge Base + Flake Intelligence + Cost Observatory</div><div class="ref-count">3 systems</div><div class="ref-arrow">&#x25BC;</div></div><div class="ref-body"><div class="ref-content"><p><strong>Knowledge Base:</strong> RAG-powered repository with hybrid search (BM25 + vectorless semantic). Stores testing patterns, failure resolutions, best practices. AI Chat queries KB before answering for context-aware responses. Categories: Playwright, Failures, Best Practices, Phoenix How-To, Custom.</p><p style="margin-top:8px"><strong>Flake Intelligence:</strong> Tracks intermittently failing tests with pattern detection (timing/network/data/unknown). Quarantine system excludes flaky tests from release verdict. Flake count, total runs, first/last flaked dates, linked requirements. Dashboard widget shows active vs quarantined counts with weekly trend.</p><p style="margin-top:8px"><strong>Cost Observatory:</strong> Full LLM spend dashboard. Period selector (today/week/month). Breakdown by provider, task type, model. Budget meter with warning at 80%. Recent AI calls table. Cost optimization tips.</p></div></div></div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section class="section sr" id="faq">
+  <div class="sec-l" style="color:var(--blue)">FAQ</div>
+  <div class="sec-t">Common Questions</div>
+  <div class="faq-acc">
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What makes Phoenix TestAI different from TestRail, Qase, or Testomat.io?<span class="arr">&#x25BC;</span></div><div class="faq-a"><div class="faq-a-inner"><strong>Phoenix is AI-native, not AI-bolted.</strong><ul><li><strong>6 autonomous agents</strong> that triage, discover, learn, and act autonomously</li><li><strong>MCP protocol</strong> lets agents browse pages, read code, inspect PRs</li><li><strong>Self-Healer covers ALL 6 failure categories</strong> (competitors only fix selectors)</li><li><strong>Self-hosted</strong> with local AI (Ollama) option</li><li><strong>Complete lifecycle</strong> in one platform: Requirements, Cases, Plans, Defects, Execution, Reports, Analytics, Compliance</li></ul></div></div></div>
+
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do the AI agents work?<span class="arr">&#x25BC;</span></div><div class="faq-a"><div class="faq-a-inner"><strong>ReAct (Reason + Act) reasoning loop:</strong><ul><li>Event triggers agent (e.g., test:failed triggers Triage)</li><li>Agent observes context using specialized tools</li><li>Reasons about action via LLM</li><li>Creates proposal with confidence score + risk level</li><li>Auto-executes if confidence exceeds threshold, otherwise waits for human approval</li></ul>3 autonomy levels: supervised (always wait), semi-autonomous (auto for low-risk), fully autonomous.</div></div></div>
+
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What AI providers does it support?<span class="arr">&#x25BC;</span></div><div class="faq-a"><div class="faq-a-inner"><strong>5 providers with 3-tier fallback:</strong> OpenRouter (200+ models, free tiers), Anthropic (Claude), OpenAI (GPT-4o), Ollama (local, private), Azure (enterprise). The LLM Router selects the best model per task based on capability, cost, and availability.</div></div></div>
+
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is MCP and why does it matter?<span class="arr">&#x25BC;</span></div><div class="faq-a"><div class="faq-a-inner"><strong>Model Context Protocol is an open standard for AI tool integration.</strong> Instead of hardcoded integrations, Phoenix uses MCP to connect to Playwright (browse pages), Filesystem (read code), and GitHub (inspect PRs). Any future MCP server can be added without code changes. This means Phoenix AI capabilities grow as the MCP ecosystem grows.</div></div></div>
+
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What testing types are supported?<span class="arr">&#x25BC;</span></div><div class="faq-a"><div class="faq-a-inner"><strong>11 testing dimensions:</strong> Web E2E (built), Cross-Browser/Device (built via Run Config), and 9 planned types: Exploratory, Performance (k6/Lighthouse), Security (OWASP), Visual Regression, API Protocol (REST/GraphQL/WebSocket/gRPC), Accessibility, Contract, Data-Driven, and Chaos/Resilience testing.</div></div></div>
+
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is it production-ready?<span class="arr">&#x25BC;</span></div><div class="faq-a"><div class="faq-a-inner"><strong>Yes.</strong> 80 API routes with RBAC. 31 Prisma models. 5-role access control. Event-driven architecture with audit trail. JWT sessions. 4 compliance frameworks. 78 E2E + 30 unit + 36 integration tests.</div></div></div>
+
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What hardware do I need?<span class="arr">&#x25BC;</span></div><div class="faq-a"><div class="faq-a-inner"><strong>Minimal:</strong> Any machine with Node.js 18+, 1GB RAM. <strong>With Ollama:</strong> GPU with 4GB+ VRAM. <strong>With cloud AI:</strong> No GPU needed. <strong>Database:</strong> SQLite (default) or PostgreSQL for production.</div></div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about sr" id="about">
+  <div class="about-inner">
+    <div class="about-avatar">KP</div>
+    <div class="about-name">Krishna Praveen Manchala</div>
+    <div class="about-role">Senior QA Manager &middot; 17+ Years in Quality Engineering</div>
+    <p class="about-quote">Built <strong>Phoenix TestAI</strong> and <strong>API Qortex</strong> as self-initiated projects to solve real problems in test automation and quality management. Not a developer by title &mdash; a QA Manager who saw the gaps in existing tools and decided to build something better. From architecture design to AI agent implementation, every line of code was written to prove that <em>quality engineers can build the tools they need.</em></p>
+    <div class="about-products">
+      <a href="../api-qortex/" class="about-prod"><div class="ap-dot" style="background:linear-gradient(135deg,#E8590C,#F97316)">A</div>API Qortex</a>
+      <div class="about-prod" style="border-color:var(--blue-bd);cursor:default"><div class="ap-dot" style="background:var(--phoenix-grad)">P</div>Phoenix TestAI</div>
+    </div>
+    <div class="about-links">
+      <a href="mailto:krishpravn@gmail.com" class="about-link"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>Email</a>
+      <a href="https://www.linkedin.com/in/krishpravn" target="_blank" class="about-link"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fl"><strong>Phoenix TestAI</strong> &middot; Part of <a href="../">Qortex Labs</a> &middot; Built by KP &middot; 2026</div>
+  <div class="fr">
+    <a href="../">Qortex Labs</a>
+    <a href="../api-qortex/">API Qortex</a>
+    <a href="https://www.linkedin.com/in/krishpravn" target="_blank">LinkedIn</a>
+    <a href="mailto:krishpravn@gmail.com">Email</a>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+window.addEventListener("scroll",function(){document.getElementById("nav").classList.toggle("sc",window.scrollY>60)});
+var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add("vi")})},{threshold:.08,rootMargin:"0px 0px -60px 0px"});
+document.querySelectorAll(".sr").forEach(function(el){obs.observe(el)});
+var cts=document.querySelectorAll("[data-count]"),counted=false;
+var co=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&!counted){counted=true;cts.forEach(function(c){var t=parseInt(c.dataset.count),sf=c.dataset.suffix||"",d=1500,s=performance.now();function tk(n){var p=Math.min((n-s)/d,1),ea=1-Math.pow(1-p,3);c.textContent=Math.round(t*ea)+sf;if(p<1)requestAnimationFrame(tk)}requestAnimationFrame(tk)})}})},{threshold:.5});
+cts.forEach(function(c){co.observe(c)});
+
+// VIBRANT EMBER PARTICLES — 35 multi-colored with glow
+(function(){
+  var hero=document.querySelector(".hero");
+  if(!hero)return;
+  var cols=["#F59E0B","#FB923C","#60A5FA","#A78BFA","#F472B6","#34D399"];
+  for(var i=0;i<35;i++){
+    var e=document.createElement("div");
+    e.className="ember";
+    e.style.left=Math.random()*100+"%";
+    e.style.bottom="-10px";
+    var sz=(3+Math.random()*5);
+    e.style.width=sz+"px";
+    e.style.height=sz+"px";
+    var col=cols[Math.floor(Math.random()*cols.length)];
+    e.style.background=col;
+    e.style.boxShadow="0 0 "+(4+Math.random()*8)+"px "+col;
+    var dur=5+Math.random()*7;
+    var delay=Math.random()*4;
+    var drift=(Math.random()>0.5?1:-1)*(30+Math.random()*40);
+    e.style.animation="emberRise "+dur+"s linear infinite "+delay+"s";
+    e.dataset.drift=drift;
+    hero.appendChild(e);
+  }
+  var st=document.createElement("style");
+  st.textContent="@keyframes emberRise{0%{opacity:0;transform:translateY(0) translateX(0) scale(.5)}8%{opacity:.85}35%{opacity:.6}65%{opacity:.3}100%{opacity:0;transform:translateY(-700px) translateX(50px)}}";
+  document.head.appendChild(st);
+})();
+
+function toggleRef(el){el.parentElement.classList.toggle("open")}
+function toggleFaq(el){el.parentElement.classList.toggle("open")}
+
+document.querySelectorAll(".feat-card").forEach(function(c){
+  c.addEventListener("mousemove",function(e){var r=c.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;var rx=(y-r.height/2)/25,ry=(r.width/2-x)/25;c.style.transform="perspective(800px) rotateX("+rx+"deg) rotateY("+ry+"deg) translateY(-4px)"});
+  c.addEventListener("mouseleave",function(){c.style.transform=""})
+});
+</script>
+</body>
+</html>
